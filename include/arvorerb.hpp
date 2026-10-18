@@ -155,20 +155,26 @@ class RB : public ArvoreBase {
     }
 
     public:
-    RB() : ArvoreBase(nullptr) {}
+    RB() : ArvoreBase(nullptr) { hasColor = true; }
 
     ~RB() {
         destroy(root);
     }
 
-    void insert(int value) override {
+    bool insert(int value) override {
+        if (search(value)) {
+            return false;
+        }
+
         root = insertRB(value, root);
         root->red = false;
+
+        return true;
     }
 
-    void remove(int value) override {
+    bool remove(int value) override {
         if (!search(value, root)) {
-            return;
+            return false;
         }
 
         if (!isRed(root->left) and !isRed(root->right)) {
@@ -180,6 +186,8 @@ class RB : public ArvoreBase {
         if (root != nullptr) {
             root->red = false;
         }
+
+        return true;
     }
 };
 
