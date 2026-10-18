@@ -41,6 +41,6 @@ class ArvoreBase {
         return search(value, root); 
     }
 
-    virtual Node* insert(int value, Node* no) = 0; 
-    virtual Node* remove(int value, Node* no) = 0;
+    virtual void insert(int value) = 0;
+    virtual void remove(int value) = 0;
 };
