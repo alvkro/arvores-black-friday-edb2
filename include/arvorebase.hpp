@@ -5,6 +5,7 @@ struct Node {
     int data {0};
     Node* left {nullptr};
     Node* right {nullptr};
+    bool red  {true};
     int height {1};
 
     Node(int val) : data(val) {}
