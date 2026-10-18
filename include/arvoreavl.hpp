@@ -100,8 +100,21 @@ private:
     }
     public:
         AVL() : ArvoreBase(nullptr) {}
-        void insert(int value) override { root = insertAVL(value, root); }
-        void remove(int value) override { root = removeAVL(value, root); }
+        virtual ~AVL() {}
+        bool insert(int value) override { 
+            if (search(value)) {
+                return false;
+            }
+            root = insertAVL(value, root); 
+            return true;
+        }
+        bool remove(int value) override { 
+            if (!search(value)) {
+                return false;
+            }
+            root = removeAVL(value, root);
+            return true;
+        }
 };
 
 #endif
