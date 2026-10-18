@@ -1,6 +1,8 @@
 #ifndef ARVOREBASE_HPP
 #define ARVOREBASE_HPP
 
+#include <iostream>
+
 struct Node {
     int data {0};
     Node* left {nullptr};
@@ -14,6 +16,15 @@ struct Node {
 class ArvoreBase {
     protected:
     Node* root {nullptr};
+    bool hasColor {false};
+
+    void emOrdemRecursivo(Node* no) {
+        if (no != nullptr) {
+            emOrdemRecursivo(no->left);
+            std::cout << no->data << " ";
+            emOrdemRecursivo(no->right);
+        }
+    }
 
     Node* findMin(Node* no) {
         while (no != nullptr && no->left != nullptr) {
@@ -41,12 +52,39 @@ class ArvoreBase {
     ArvoreBase(Node* m_root) : root(m_root) {}
     virtual ~ArvoreBase() {}
 
+    void printVisual(Node* no, int espaco) {
+        if (no == nullptr) return;
+
+        espaco += 5;
+        printVisual(no->right, espaco);
+
+        for (int i = 5; i < espaco; i++) std::cout << " ";
+        std::cout << no->data;
+        if (hasColor) {
+            if (no->red) std::cout << "(R)";
+            else std::cout << "(B)";
+        }
+        std::cout << "\n";
+
+        printVisual(no->left, espaco);
+    }
+
+    void printTree() {
+        printVisual(root, 0);
+        std::cout << "------------------------\n";
+    }
+
     bool search(int value) {
         return search(value, root); 
     }
 
-    virtual void insert(int value) = 0;
-    virtual void remove(int value) = 0;
+    void printInOrder() {
+        emOrdemRecursivo(root);
+        std::cout << std::endl;
+    }
+
+    virtual bool insert(int value) = 0;
+    virtual bool remove(int value) = 0;
 };
 
 #endif
