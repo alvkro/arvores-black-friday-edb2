@@ -1,163 +1,107 @@
+#ifndef ARVORE_AVL_HPP
+#define ARVORE_AVL_HPP
+
 #include "arvorebase.hpp"
 #include <algorithm>
 
 class AVL : public ArvoreBase {
-    private:
-    /// @brief Getter do height 
-    /// @param no 
-    /// @return height 
+private:
     int getHeight(Node* no) {
-        if (no == nullptr) {
-            return 0;
-        }
-        return no->height;
+        return no == nullptr ? 0 : no->height;
     }
 
-    /// @brief  Acha a altura de uma sub-árvore
-    /// @param no 
-    /// @return altura (height) da sub-árvore
-    int findHeight(Node* no) {
-        if (no == nullptr) {
-            return 0;
-        }
-        auto left = findHeight(no->left);
-        auto right = findHeight(no->right);
-        return 1 + std::max(left, right);
+    void updateHeight(Node* no) {
+        no->height = 1 + std::max(getHeight(no->left), getHeight(no->right));
     }
 
     int getBalanceFactor(Node* no) {
-        if (no == nullptr) {
-            return 0;
-        }
-
-        auto h_left = findHeight(no->left);
-        auto h_right = findHeight(no->right);
-
-        return h_left - h_right;
+        if (no == nullptr) return 0;
+        return getHeight(no->left) - getHeight(no->right);
     }
 
     Node* rotateRight(Node* y) {
-        if (y == nullptr) {
-            return nullptr;
-        }
-        auto newNo = y->left;
-        y->left = newNo->right;
-        newNo->right = y;
-
-        return newNo;
+        Node* x = y->left;
+        y->left = x->right;
+        x->right = y;
+        updateHeight(y);
+        updateHeight(x);
+        return x;
     }
 
     Node* rotateLeft(Node* x) {
-        if (x == nullptr) {
-            return nullptr;
-        }
-        auto newNo = x->right;
-        x->right = newNo->left;
-        newNo->left = x;
-
-        return newNo;
+        Node* y = x->right;
+        x->right = y->left;
+        y->left = x;
+        updateHeight(x);
+        updateHeight(y);
+        return y;
     }
 
-    Node* insertAVL(int value, Node* no) {
-        if (no == nullptr) {
-            return new Node(value); // caso base
-        }
-
-        if (value < no->data) {
-            no->left = insert(value, no->left);
-        } else if (value > no->data) {
-            no->right = insert(value, no->right);
-        }
-        
-        no->height = 1 + std::max(getHeight(no->left), getHeight(no->right));
-
+    Node* rebalance(Node* no) {
+        updateHeight(no);
         int balance = getBalanceFactor(no);
 
-        // Left Left Case (LL)
-        if (balance > 1 && value < no->left->data) {
+        // LL
+        if (balance > 1 && getBalanceFactor(no->left) >= 0) {
             return rotateRight(no);
         }
-        // Right Right Case (RR)
-        if (balance < -1 && value > no->right->data) {
-            return rotateLeft(no);
-        }
-        // Left Right Case (LR)
-        if (balance > 1 && value > no->left->data) {
+        // LR
+        if (balance > 1 && getBalanceFactor(no->left) < 0) {
             no->left = rotateLeft(no->left);
             return rotateRight(no);
         }
-        // Right Left Case (RL)
-        if (balance < -1 && value < no->right->data) {
+        // RR
+        if (balance < -1 && getBalanceFactor(no->right) <= 0) {
+            return rotateLeft(no);
+        }
+        // RL
+        if (balance < -1 && getBalanceFactor(no->right) > 0) {
             no->right = rotateRight(no->right);
             return rotateLeft(no);
         }
-
         return no;
     }
 
-    Node* removeAVL(int value, Node* no) {
-            if (no == nullptr) {
-                return nullptr;
-            }
-        
-            if (value < no->data) {
-                no->left = remove(value, no->left);
-            } else if (value > no->data) {
-                no->right = remove(value, no->right);
-            } else {
-            
-            // Caso 1: zero filhos
-            if (no->left == nullptr and no->right == nullptr) {
-                delete no;
-                return nullptr;
-            }
-        
-            // Caso 2: um filho
-            if (no->left != nullptr) {
-                Node* temp_node = no->left;
-                delete no;
-                return temp_node;
-            } else if (no->right != nullptr) {
-                Node* temp_node = no->right;
-                delete no;
-                return temp_node;
-            }
-        
-            // Caso 3: dois filhos
-            Node* sucessor = no->right;
-            while (sucessor->left != nullptr) {
-                sucessor = sucessor->left;
-            }
-            no->data = sucessor->data;
-            no->right = removeAVL(sucessor->data, no->right);
-        
-            no->height = 1 + std::max(getHeight(no->left), getHeight(no->right));
-        
-            int balance = getBalanceFactor(no);
-        
-            // Caso LL
-            if (balance > 1 && getBalanceFactor(no->left) >= 0) {
-                return rotateRight(no);
-            }
-        
-            // Caso LR
-            if (balance > 1 && getBalanceFactor(no->left) < 0) {
-                no->left = rotateLeft(no->left);
-                return rotateRight(no);
-            }
-        
-            // Caso RR
-            if (balance < -1 && getBalanceFactor(no->right) <= 0) {
-                return rotateLeft(no);
-            }
-        
-            // Caso RL
-            if (balance < -1 && getBalanceFactor(no->right) > 0) {
-                no->right = rotateRight(no->right);
-                return rotateLeft(no);
-            }
-        
+    Node* insertAVL(int value, Node* no) {
+        if (no == nullptr) return new Node(value);
+
+        if (value < no->data) {
+            no->left  = insertAVL(value, no->left);
+        }
+        else if (value > no->data) {
+            no->right = insertAVL(value, no->right);
+        }
+        else {
             return no;
         }
+        return rebalance(no);
     }
-};  
+
+    Node* removeAVL(int value, Node* no) {
+        if (no == nullptr) return nullptr;
+
+        if (value < no->data) {
+            no->left = removeAVL(value, no->left);
+        } else if (value > no->data) {
+            no->right = removeAVL(value, no->right);
+        } else {
+            // 0 ou 1 filho
+            if (no->left == nullptr || no->right == nullptr) {
+                Node* filho = no->left ? no->left : no->right;
+                delete no;
+                return filho;
+            }
+            // 2 filhos:
+            Node* sucessor = findMin(no->right);
+            no->data = sucessor->data;
+            no->right = removeAVL(sucessor->data, no->right);
+        }
+        return rebalance(no);
+    }
+    public:
+        AVL() : ArvoreBase(nullptr) {}
+        void insert(int value) override { root = insertAVL(value, root); }
+        void remove(int value) override { root = removeAVL(value, root); }
+};
+
+#endif
