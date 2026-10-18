@@ -1,3 +1,6 @@
+#ifndef ARVOREBASE_HPP
+#define ARVOREBASE_HPP
+
 struct Node {
     int data {0};
     Node* left {nullptr};
@@ -44,3 +47,5 @@ class ArvoreBase {
     virtual void insert(int value) = 0;
     virtual void remove(int value) = 0;
 };
+
+#endif
