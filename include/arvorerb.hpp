@@ -22,6 +22,7 @@ class RB : public ArvoreBase {
         newNo->red = y->red;
         y->red = true;
 
+        this->total_rotations++;
         return newNo;
     }
 
@@ -35,6 +36,7 @@ class RB : public ArvoreBase {
         newNo->red = x->red;
         x->red = true;
 
+        this->total_rotations++;
         return newNo;
     }
 
@@ -68,7 +70,6 @@ class RB : public ArvoreBase {
             no = rotateLeft(no);
             flipColors(no);
         }
-
         return no;
     }
 
@@ -79,7 +80,6 @@ class RB : public ArvoreBase {
             no = rotateRight(no);
             flipColors(no);
         }
-
         return no;
     }
 
