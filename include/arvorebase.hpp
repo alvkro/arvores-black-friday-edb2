@@ -15,8 +15,16 @@ struct Node {
 
 class ArvoreBase {
     protected:
+    int total_rotations {0};
     Node* root {nullptr};
     bool hasColor {false};
+
+    int calcHeight(Node* no) {
+        if (no == nullptr) {
+            return 0;
+        }
+        return 1 + std::max(calcHeight(no->left), calcHeight(no->right));
+    }
 
     void emOrdemRecursivo(Node* no) {
         if (no != nullptr) {
@@ -67,6 +75,14 @@ class ArvoreBase {
         std::cout << "\n";
 
         printVisual(no->left, espaco);
+    }
+
+    int getTotalRotacoes() {
+        return total_rotations;
+    }
+
+    int height() {
+        return calcHeight(root);
     }
 
     void printTree() {
