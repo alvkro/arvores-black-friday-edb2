@@ -25,6 +25,7 @@ private:
         x->right = y;
         updateHeight(y);
         updateHeight(x);
+        this->total_rotations++;
         return x;
     }
 
@@ -34,6 +35,7 @@ private:
         y->left = x;
         updateHeight(x);
         updateHeight(y);
+        this->total_rotations++;
         return y;
     }
 
