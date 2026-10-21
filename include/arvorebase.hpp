@@ -1,23 +1,29 @@
 #ifndef ARVOREBASE_HPP
 #define ARVOREBASE_HPP
 
+#include <algorithm>
+#include <climits>
 #include <iostream>
+#include <string>
+#include <vector>
 
 struct Node {
     int data {0};
     Node* left {nullptr};
     Node* right {nullptr};
-    bool red  {true};
-    int height {1};
+    bool red  {true}; // RB
+    int height {1}; // AVL
 
     Node(int val) : data(val) {}
 };
 
+
 class ArvoreBase {
     protected:
     int total_rotations {0};
+    int total_flips {0};      
     Node* root {nullptr};
-    bool hasColor {false};
+    bool hasColor {false};    
 
     int calcHeight(Node* no) {
         if (no == nullptr) {
@@ -26,12 +32,37 @@ class ArvoreBase {
         return 1 + std::max(calcHeight(no->left), calcHeight(no->right));
     }
 
+    int calcSize(Node* no) {
+        if (no == nullptr) {
+            return 0;
+        }
+        return 1 + calcSize(no->left) + calcSize(no->right);
+    }
+
     void emOrdemRecursivo(Node* no) {
         if (no != nullptr) {
             emOrdemRecursivo(no->left);
             std::cout << no->data << " ";
             emOrdemRecursivo(no->right);
         }
+    }
+
+    void coletar(Node* no, std::vector<int>& valores) {
+        if (no == nullptr) {
+            return;
+        }
+        coletar(no->left, valores);
+        valores.push_back(no->data);
+        coletar(no->right, valores);
+    }
+
+    void destroy(Node* no) {
+        if (no == nullptr) {
+            return;
+        }
+        destroy(no->left);
+        destroy(no->right);
+        delete no;
     }
 
     Node* findMin(Node* no) {
@@ -58,45 +89,89 @@ class ArvoreBase {
 
     public:
     ArvoreBase(Node* m_root) : root(m_root) {}
-    virtual ~ArvoreBase() {}
-
-    void printVisual(Node* no, int espaco) {
-        if (no == nullptr) return;
-
-        espaco += 5;
-        printVisual(no->right, espaco);
-
-        for (int i = 5; i < espaco; i++) std::cout << " ";
-        std::cout << no->data;
-        if (hasColor) {
-            if (no->red) std::cout << "(R)";
-            else std::cout << "(B)";
-        }
-        std::cout << "\n";
-
-        printVisual(no->left, espaco);
+    ArvoreBase(const ArvoreBase&) = delete;
+    ArvoreBase& operator=(const ArvoreBase&) = delete;
+    virtual ~ArvoreBase() {
+        destroy(root);
     }
 
-    int getTotalRotacoes() {
-        return total_rotations;
+void printVisual(Node* no, const std::string& prefixo, bool ultimo) {
+    std::cout << prefixo << (ultimo ? "└── " : "├── ");
+    if (no == nullptr) {
+        std::cout << "·\n";
+        return;
+    }
+    printNo(no);
+
+    if (no->left == nullptr and no->right == nullptr) {
+        return;
+    }
+    std::string novoPrefixo = prefixo + (ultimo ? "    " : "│   ");
+    printVisual(no->left, novoPrefixo, false);
+    printVisual(no->right, novoPrefixo, true);
+}
+
+void printNo(Node* no) {
+    std::cout << no->data;
+    if (hasColor) {
+        std::cout << (no->red ? "(R)" : "(B)");
+    } else {
+        std::cout << "(h=" << no->height << ")";
+    }
+    std::cout << "\n";
+}
+
+void printTree() {
+    if (root == nullptr) {
+        std::cout << "(arvore vazia)\n";
+    } else {
+        printNo(root);
+        if (root->left != nullptr or root->right != nullptr) {
+            printVisual(root->left, "", false);
+            printVisual(root->right, "", true);
+        }
+    }
+    std::cout << "------------------------\n";
+}
+
+    void printInOrder() {
+        emOrdemRecursivo(root);
+        std::cout << std::endl;
+    }
+
+    bool search(int value) {
+        return search(value, root);
     }
 
     int height() {
         return calcHeight(root);
     }
 
-    void printTree() {
-        printVisual(root, 0);
-        std::cout << "------------------------\n";
+    int size() {
+        return calcSize(root);
     }
 
-    bool search(int value) {
-        return search(value, root); 
+    std::vector<int> toVector() {
+        std::vector<int> valores;
+        coletar(root, valores);
+        return valores;
     }
 
-    void printInOrder() {
-        emOrdemRecursivo(root);
-        std::cout << std::endl;
+    int getTotalRotacoes() {
+        return total_rotations;
+    }
+
+    int getTotalFlips() {
+        return total_flips;
+    }
+
+    void resetContadores() {
+        total_rotations = 0;
+        total_flips = 0;
+    }
+
+    bool usaCor() {
+        return hasColor;
     }
 
     virtual bool insert(int value) = 0;
