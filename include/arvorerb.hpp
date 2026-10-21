@@ -2,7 +2,6 @@
 #define ARVORE_RB_HPP
 
 #include "arvorebase.hpp"
-
 class RB : public ArvoreBase {
     private:
     bool isRed(Node* no) {
@@ -20,7 +19,7 @@ class RB : public ArvoreBase {
         y->left = newNo->right;
         newNo->right = y;
         newNo->red = y->red;
-        y->red = true;
+        y->red = true;  
 
         this->total_rotations++;
         return newNo;
@@ -44,6 +43,7 @@ class RB : public ArvoreBase {
         no->red = !no->red;
         no->left->red = !no->left->red;
         no->right->red = !no->right->red;
+        this->total_flips++;
     }
 
     Node* rebalance(Node* no) {
@@ -85,7 +85,7 @@ class RB : public ArvoreBase {
 
     Node* insertRB(int value, Node* no) {
         if (no == nullptr) {
-            return new Node(value); // caso base
+            return new Node(value);
         }
 
         if (value < no->data) {
@@ -145,21 +145,9 @@ class RB : public ArvoreBase {
         return rebalance(no);
     }
 
-    void destroy(Node* no) {
-        if (no == nullptr) {
-            return;
-        }
-        destroy(no->left);
-        destroy(no->right);
-        delete no;
-    }
 
     public:
     RB() : ArvoreBase(nullptr) { hasColor = true; }
-
-    ~RB() {
-        destroy(root);
-    }
 
     bool insert(int value) override {
         if (search(value)) {
