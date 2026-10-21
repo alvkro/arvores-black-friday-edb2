@@ -14,5 +14,7 @@ include_directories(include)
 # 2. Aponta o caminho correto do main.cpp (que está dentro de "src")
 add_executable(amazon_logistics src/main.cpp)
 
+add_executable(testes src/testes.cpp)
+
 # Opcional: Adiciona flags de compilação
 target_compile_options(amazon_logistics PRIVATE -Wall -Wextra)
