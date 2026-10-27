@@ -119,49 +119,45 @@ void inserirMostrando(ArvoreBase& arvore, int valor) {
 
 // Cenarios pequenos e fixos, pensados para os slides
 void demonstracao() {
-    cout << "\n##### AVL: rotacao simples (caso LL) #####\n";
-    AVL a1;
-    a1.insert(30);
-    a1.insert(20);
-    inserirMostrando(a1, 10);
+    cout << "\n============================================\n";
+    cout << "   DEMONSTRACAO VISUAL: AVL vs LLRB\n";
+    cout << "============================================\n";
 
-    cout << "\n##### AVL: rotacao dupla (caso LR) #####\n";
-    AVL a2;
-    a2.insert(30);
-    a2.insert(10);
-    inserirMostrando(a2, 20);
+    AVL avl;
+    RB rb;
 
-    cout << "\n##### Rubro-Negra: rotacao (vermelho a direita) #####\n";
-    RB r1;
-    r1.insert(10);
-    inserirMostrando(r1, 20);
-
-    cout << "\n##### Rubro-Negra: troca de cores (flipColors) #####\n";
-    inserirMostrando(r1, 30);
-
-    cout << "\n##### Insercao de 1 a 7 e remocao do 4 (no com dois filhos) #####\n";
-    AVL a3;
-    RB r3;
-    for (int v = 1; v <= 7; v++) {
-        a3.insert(v);
-        r3.insert(v);
+    // 1. INSERCAO
+    cout << "\n[1] INSERINDO PACOTES: 20, 10, 30, 5, 15, 25, 40\n";
+    vector<int> pacotes = {20, 10, 30, 5, 15, 25, 40};
+    for (int p : pacotes) {
+        avl.insert(p);
+        rb.insert(p);
     }
-    cout << "AVL:\n";
-    a3.printTree();
-    cout << "Rubro-Negra:\n";
-    r3.printTree();
+    
+    cout << "\n--- Estrutura AVL ---\n";
+    avl.printTree();
+    cout << "\n--- Estrutura LLRB ---\n";
+    rb.printTree();
 
-    a3.remove(4);
-    r3.remove(4);
-    cout << "AVL apos remover 4:\n";
-    a3.printTree();
-    cout << "Rubro-Negra apos remover 4:\n";
-    r3.printTree();
+    // 2. BUSCA
+    cout << "\n[2] OPERACOES DE BUSCA\n";
+    cout << "-> Buscando pacote 15 (Existente):\n";
+    cout << "   AVL: " << (avl.search(15) ? "ENCONTRADO" : "FALHOU") << "\n";
+    cout << "   LLRB: " << (rb.search(15) ? "ENCONTRADO" : "FALHOU") << "\n";
 
-    cout << "\n##### Valor repetido e remocao de inexistente #####\n";
-    cout << "Inserir 5 de novo (AVL): " << (a3.insert(5) ? "inserido" : "recusado (duplicado)") << "\n";
-    cout << "Remover 99 (RB): " << (r3.remove(99) ? "removido" : "nao encontrado") << "\n";
-    cout << "Buscar 99 (RB): " << (r3.search(99) ? "encontrado" : "nao encontrado") << "\n";
+    cout << "-> Buscando pacote 99 (Inexistente):\n";
+    cout << "   AVL: " << (avl.search(99) ? "ENCONTRADO" : "NAO ENCONTRADO") << "\n";
+    cout << "   LLRB: " << (rb.search(99) ? "ENCONTRADO" : "NAO ENCONTRADO") << "\n";
+
+    // 3. REMOCAO
+    cout << "\n[3] REMOCAO DO PACOTE 20 (Nó raiz com 2 filhos)\n";
+    avl.remove(20);
+    rb.remove(20);
+
+    cout << "\n--- AVL Apos Remocao do 20 ---\n";
+    avl.printTree();
+    cout << "\n--- LLRB Apos Remocao do 20 ---\n";
+    rb.printTree();
 }
 
 void mostrarUso() {
