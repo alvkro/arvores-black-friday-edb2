@@ -1,6 +1,6 @@
 # Amazon Engineering Challenge: Árvores Balanceadas (AVL e Rubro-Negra)
 
-**Autor:** [SEU NOME] — [MATRÍCULA]
+**Autor:** Alvaro Barbosa Filho — 20250028947
 **Disciplina:** IMD0039 - Estruturas de Dados Básicas II (Trabalho da Unidade II)
 
 Protótipo em C++ para o sistema de logística da Black Friday: registra, localiza e
@@ -24,20 +24,17 @@ foram implementados do zero (sem bibliotecas prontas).
 Requisitos: compilador C++17 (`g++` 7+ ou equivalente). `make` é opcional.
 
 ```bash
-make                  # gera ./amazon_logistics e ./testes
+mkdir build
+cd build
+cmake ..
+make      # Gera os executáveis teste e amazon_logistics
 ```
 
-Sem `make`:
-
-```bash
-g++ -std=c++17 -O2 main.cpp -o amazon_logistics
-g++ -std=c++17 -O2 testes.cpp -o testes
-```
 
 ### Uso
 
 ```bash
-./amazon_logistics <--avl | --rb> [qtd] [seed]
+./amazon_logistics <--avl | --rb> [qtd]
 ./amazon_logistics --demo
 ./testes
 ```
@@ -46,18 +43,15 @@ g++ -std=c++17 -O2 testes.cpp -o testes
 |---|---|---|
 | `--avl` / `--rb` | Estrutura utilizada | obrigatório |
 | `qtd` | Quantidade de encomendas | 10 |
-| `seed` | Semente do embaralhamento (`mt19937`) | 42 |
-| `--demo` | Cenários pequenos e fixos: rotações da AVL, rotação e troca de cores da RB, remoção, duplicado e inexistente | — |
+| `--demo` | Cenários pequenos e fixos: inserção, remoção e busca + ilustração das árvores AVL e LLRB | — |
 
 Exemplos:
 
 ```bash
 ./amazon_logistics --avl            # 10 encomendas, mostra a árvore inteira
-./amazon_logistics --rb 5000 67     # 5000 encomendas, mostra só as métricas
+./amazon_logistics --rb 5000        # 5000 encomendas, mostra só as métricas
 ```
 
-Com a mesma `seed` e o mesmo `qtd`, as duas árvores recebem **exatamente os mesmos
-dados** e os resultados se repetem a cada execução.
 
 ## Funcionalidades
 
