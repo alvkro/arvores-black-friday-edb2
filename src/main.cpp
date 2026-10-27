@@ -18,7 +18,7 @@ ArvoreBase* criarArvore(const string& estrutura) {
 // Lote base: ids de 0 a n-1 (o vetor ja chega com o tamanho certo)
 void inserir_pedidos(vector<int>& pedidos) {
     for (size_t i {0}; i < pedidos.size(); ++i) {
-        pedidos[i] = i;
+        pedidos[i] = i + 1;
     }
 }
 
@@ -165,7 +165,7 @@ void demonstracao() {
 }
 
 void mostrarUso() {
-    cout << "Uso: ./amazon_logistics <--avl | --rb> [qtd] [seed]\n";
+    cout << "Uso: ./amazon_logistics <--avl | --llrb> [qtd]\n";
     cout << "     ./amazon_logistics --demo\n";
     cout << "  qtd   quantidade de encomendas (padrao: 10)\n";
     cout << "  seed  semente do embaralhamento (padrao: 42)\n";
@@ -185,7 +185,7 @@ int main(int argc, char* argv[]) {
         return 0;
     }
 
-    if (estrutura != "--avl" and estrutura != "--rb") {
+    if (estrutura != "--avl" and estrutura != "--llrb") {
         cout << "ERRO: Estrutura desconhecida.\n";
         mostrarUso();
         return 1;
@@ -197,11 +197,8 @@ int main(int argc, char* argv[]) {
         if (argc > 2) {
             qtd = std::stoi(argv[2]);
         }
-        if (argc > 3) {
-            seed = std::stoi(argv[3]);
-        }
     } catch (const std::exception&) {
-        cout << "ERRO: qtd e seed devem ser numeros inteiros.\n";
+        cout << "ERRO: seed deve ser numeros inteiros.\n";
         mostrarUso();
         return 1;
     }
