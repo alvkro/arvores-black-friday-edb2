@@ -12,16 +12,17 @@ foram implementados do zero (sem bibliotecas prontas).
 
 | Arquivo | Descrição |
 |---|---|
-| `arvorebase.hpp` | `Node` e a classe abstrata `ArvoreBase` (busca, em ordem, impressão, altura, contadores) |
-| `arvoreavl.hpp` | Árvore AVL |
-| `arvorerb.hpp` | Árvore Rubro-Negra (variante Left-Leaning) |
-| `main.cpp` | Programa principal (cenários, métricas e demonstração) |
-| `testes.cpp` | Testes automatizados e tabelas comparativas |
-| `Makefile` | Compilação |
+| `include/arvorebase.hpp` | `Node` e a classe abstrata `ArvoreBase` (busca, em ordem, impressão, altura, contadores) |
+| `include/arvoreavl.hpp` | Árvore AVL |
+| `include/arvorerb.hpp` | Árvore Rubro-Negra (variante Left-Leaning) |
+| `src/main.cpp` | Programa principal (cenários, métricas e demonstração) |
+| `src/testes.cpp` | Testes automatizados e tabelas comparativas |
+| `CMakeLists.txt` | Compilação |
+| `amazon_logistics e testes` | arquivos `bin` para executar |
 
 ## Compilação e execução
 
-Requisitos: compilador C++17 (`g++` 7+ ou equivalente). `make` é opcional.
+Requisitos: compilador C++17 (`g++` 7+ ou equivalente).
 
 ```bash
 mkdir build
